@@ -1,5 +1,6 @@
 # Command executor
 gRPC server, which is responsible for executing processes inside its container. 
+[diagram](diagram.png)
 
 Command executor communicates with PipelineAgent. An example of the commands sent by the PipelineAgent:
 ```yaml
