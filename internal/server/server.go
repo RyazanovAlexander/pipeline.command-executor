@@ -43,7 +43,7 @@ type server struct {
 	UnimplementedExecServiceServer
 }
 
-func (s *server) ExecuteCommand(ctx context.Context, in *ExecCommands) (*ExecResult, error) {
+func (s *server) ExecuteCommands(ctx context.Context, in *ExecCommands) (*ExecResult, error) {
 	result := true
 	errorMessage := ""
 	output := make([]string, len(in.Commands))
