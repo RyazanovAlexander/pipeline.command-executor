@@ -1,0 +1,46 @@
+pipeline_agent:
+  image:
+    name: aryazanov/fake-agent
+    tag: null # @required
+    containerRegister: docker.io
+  imageConfig:
+    pullPolicy: Always
+  env:
+    - name: PIPELINE_AGENT__NAME
+      value: "EchoAgent"
+    - name: PIPELINE_AGENT__EXECUTORS__0__NAME
+      value: "echo"
+    - name: PIPELINE_AGENT__EXECUTORS__0__TARGET
+      value: "127.0.0.1:50051"
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi
+
+command-executor:
+  image:
+    name: aryazanov/command-executor
+    tag: null # @required
+    containerRegister: docker.io
+  imageConfig:
+    pullPolicy: Always
+  env:
+    - name: COMMAND_EXECUTOR_NAME
+      value: "echo"
+    - name: COMMAND_EXECUTOR_SERVER_GRPC_PORT
+      value: ":50051"
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi
+
+imagePullSecrets: []
+
+nodeSelector:
+  kubernetes.io/os: linux

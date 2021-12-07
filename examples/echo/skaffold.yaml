@@ -1,0 +1,20 @@
+apiVersion: skaffold/v2beta10
+kind: Config
+build:
+  artifacts:
+  - image: pipeline-agent
+    context: ./fake/agent
+  - image: example-echo
+    context: ./example/echo/
+deploy:
+  helm:
+    releases:
+    - name: echo
+      namespace: example-echo
+      createNamespace: true
+      chartPath: ./chart
+      artifactOverrides:
+        pipeline_agent:
+          image: pipeline-agent
+        command-executor:
+          image: example-echo
