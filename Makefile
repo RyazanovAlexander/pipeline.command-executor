@@ -104,10 +104,10 @@ container:
 
 # make example name=echo
 .PHONY: example
-example-echo:
+example:
 	@skaffold dev -f ./examples/$(name)/skaffold.yaml --no-prune=false --cache-artifacts=false
 
 # make example-delete name=echo
 .PHONY: example-delete
-example-echo-delete:
+example-delete:
 	@skaffold delete -f ./examples/$(name)/skaffold.yaml

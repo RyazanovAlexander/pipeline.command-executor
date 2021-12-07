@@ -2,19 +2,23 @@ apiVersion: skaffold/v2beta10
 kind: Config
 build:
   artifacts:
-  - image: pipeline-agent
-    context: ./fake/agent
-  - image: example-echo
-    context: ./example/echo/
+  - image: aryazanov/pipeline/agent/fake
+    context: ./fakes/.agent
+    docker:
+      dockerfile: Dockerfile
+  - image: aryazanov/pipeline/executor/echo
+    context: .
+    docker:
+      dockerfile: ./examples/echo/Dockerfile
 deploy:
   helm:
     releases:
     - name: echo
       namespace: example-echo
       createNamespace: true
-      chartPath: ./chart
+      chartPath: ./examples/echo/chart
       artifactOverrides:
         pipeline_agent:
-          image: pipeline-agent
+          image: aryazanov/pipeline/agent/fake
         command-executor:
-          image: example-echo
+          image: aryazanov/pipeline/executor/echo

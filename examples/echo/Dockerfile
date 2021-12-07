@@ -2,7 +2,7 @@ FROM golang:alpine AS builder
 
 RUN apk update && apk add --no-cache git
 WORKDIR /src/
-COPY ../../ .
+COPY . .
 
 ARG GOOS=linux
 ARG GOARCH=amd64
@@ -14,7 +14,7 @@ RUN GOOS=$GOOS GOARCH=$GOARCH GO111MODULE=on go build -ldflags "$LDFLAGS" -o /bi
 
 FROM alpine:3.13.5
 WORKDIR /
-COPY --from=command-executor /bin/command-executor /bin/command-executor
+COPY --from=builder /bin/command-executor /bin/command-executor
 
 USER 65535:65535
 ENTRYPOINT ["command-executor"]
