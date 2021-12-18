@@ -1,5 +1,6 @@
 # Command executor
-gRPC server, which is responsible for executing processes inside its container. 
+A service designed to execute commands inside its container. By default, it starts processes with parameters through the shell.
+
 ![diagram](diagrams/diagram.png)
 
 Command executor communicates with PipelineAgent. An example of the commands sent by the PipelineAgent:
@@ -27,9 +28,10 @@ Command executor communicates with PipelineAgent. An example of the commands sen
 
 A command executor layer must be added to each Container where it must execute commands. Example:
 ```Dockerfile
-FROM docker.io/aryazanov/command-executor:0.0.2 AS command-executor
+ARG IMAGE_TAG=latest
+FROM docker.io/aryazanov/command-executor:${IMAGE_TAG} AS command-executor
 
-FROM clearlinux/tesseract-ocr:4.1.0
+FROM clearlinux/tesseract-ocr:4.1.1
 WORKDIR /
 COPY --from=command-executor /bin/command-executor /bin/command-executor
 
