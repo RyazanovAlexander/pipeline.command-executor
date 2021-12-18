@@ -1,5 +1,6 @@
 # Command executor
-gRPC server, which is responsible for executing processes inside its container. 
+A service designed to execute commands inside its container. By default, it starts processes with parameters through the shell.
+
 ![diagram](diagrams/diagram.png)
 
 Command executor communicates with PipelineAgent. An example of the commands sent by the PipelineAgent:
