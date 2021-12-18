@@ -14,5 +14,5 @@ RUN GOOS=$GOOS GOARCH=$GOARCH GO111MODULE=on go build -ldflags "$LDFLAGS" -o /bi
 
 FROM alpine:3.15.0
 COPY --from=builder /bin/fake-agent /bin/fake-agent
-USER nonroot:nonroot
+USER 65535:65535
 ENTRYPOINT ["/bin/fake-agent"]

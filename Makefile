@@ -29,6 +29,14 @@ GOARCH := amd64
 SRC := $(shell find . -type f -name "*.go" -print) go.mod go.sum
 
 # ------------------------------------------------------------------------------
+#  init
+
+init:
+	minikube start
+	minikube docker-env
+	minikube -p minikube docker-env | Invoke-Expression
+
+# ------------------------------------------------------------------------------
 #  run
 
 run: build
