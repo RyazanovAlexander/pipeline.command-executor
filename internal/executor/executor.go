@@ -31,6 +31,8 @@ import (
 	"github.com/RyazanovAlexander/pipeline-manager/command-executor/v1/config"
 )
 
+// To obtain maximum performance, it is necessary to replace the command call in the shells
+// with a call to the running process of a specific application through its client.
 func ExecCommand(cmd string, logger *log.Logger) (string, error) {
 	shell := "sh"
 	if config.Config.Debug {
