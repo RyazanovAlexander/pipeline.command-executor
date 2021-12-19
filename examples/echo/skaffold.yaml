@@ -1,0 +1,31 @@
+apiVersion: skaffold/v2beta26
+kind: Config
+build:
+  artifacts:
+  - image: pipeline/agent/fake
+    context: ./fakes/.agent
+    docker:
+      dockerfile: Dockerfile
+  - image: pipeline/executor/echo
+    context: .
+    docker:
+      dockerfile: ./examples/echo/Dockerfile
+deploy:
+  helm:
+    releases:
+    - name: echo
+      namespace: example-echo
+      createNamespace: true
+      chartPath: ./examples/echo/chart
+      setValueTemplates:
+        pipeline_agent:
+          imageConfig:
+            pullPolicy: IfNotPresent
+        executor_echo:
+          imageConfig:
+            pullPolicy: IfNotPresent
+      artifactOverrides:
+        pipeline_agent:
+          image: pipeline/agent/fake
+        executor_echo:
+          image: pipeline/executor/echo

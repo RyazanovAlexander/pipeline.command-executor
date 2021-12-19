@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright The pipeline-manager Authors.
+Copyright The pipeline-agent Authors.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,24 +26,24 @@ package cmd
 
 import (
 	"fmt"
-	"io"
+	"log"
 
 	"github.com/spf13/cobra"
 
 	"github.com/RyazanovAlexander/pipeline-manager/command-executor/v1/internal/version"
 )
 
-func newVersionCmd(out io.Writer) *cobra.Command {
+func newVersionCmd(logger *log.Logger) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "version",
 		Short: "Show the version for command-executor.",
 		Long:  `Show the version for command-executor.`,
-		Run:   func(cmd *cobra.Command, args []string) { runVersionCmd(out, args) },
+		Run:   func(cmd *cobra.Command, args []string) { runVersionCmd(logger, args) },
 	}
 
 	return cmd
 }
 
-func runVersionCmd(out io.Writer, args []string) {
-	fmt.Fprintln(out, fmt.Sprintf("%#v", version.GetBuildInfo()))
+func runVersionCmd(logger *log.Logger, args []string) {
+	logger.Println(fmt.Sprintf("%#v", version.GetBuildInfo()))
 }

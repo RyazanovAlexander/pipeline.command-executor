@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright The pipeline-manager Authors.
+Copyright The pipeline-agent Authors.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,19 +25,36 @@ SOFTWARE.
 package main
 
 import (
+	"context"
 	"log"
 	"os"
+	"os/signal"
 
 	"github.com/RyazanovAlexander/pipeline-manager/command-executor/v1/cmd"
 	"github.com/RyazanovAlexander/pipeline-manager/command-executor/v1/config"
 )
 
-func init() {
-	log.SetFlags(log.Lshortfile)
-	config.Load()
-}
-
 func main() {
-	rootCmd := cmd.NewRootCmd(os.Stdout, os.Args[1:])
-	rootCmd.Execute()
+	config.Load()
+	logger := log.New(os.Stdout, "", log.Lshortfile|log.LstdFlags)
+
+	sigCh := make(chan os.Signal, 1)
+	signal.Notify(sigCh, os.Interrupt)
+
+	errCh := make(chan error)
+	rootCmd := cmd.NewRootCmd(logger, os.Args[1:])
+	go func() {
+		errCh <- rootCmd.ExecuteContext(context.Background())
+	}()
+
+	select {
+	case <-sigCh:
+		logger.Println()
+		logger.Println("Interrupt signal received. Finishing the application...")
+		return
+	case err := <-errCh:
+		if err != nil {
+			logger.Fatal(err)
+		}
+	}
 }

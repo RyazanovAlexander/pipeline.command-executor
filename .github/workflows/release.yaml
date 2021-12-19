@@ -1,0 +1,34 @@
+name: Publish artifacts
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:       
+  archive-build-artifacts:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.18
+
+    - name: Build
+      run: |
+        make build
+
+    - name: Test
+      run: |
+        make test
+
+    - name: Container
+      run: |
+        make container
+  
+    - name: Publish
+      uses: actions/upload-artifact@v2
+      with: 
+        name: command-executor
+        path: bin/command-executor

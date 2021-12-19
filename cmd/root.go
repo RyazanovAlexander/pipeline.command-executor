@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright The pipeline-manager Authors.
+Copyright The pipeline-agent Authors.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,8 +25,7 @@ SOFTWARE.
 package cmd
 
 import (
-	"fmt"
-	"io"
+	"log"
 
 	"github.com/spf13/cobra"
 
@@ -41,27 +40,27 @@ Common actions for command-executor:
 `
 
 // NewRootCmd creates new root cmd.
-func NewRootCmd(out io.Writer, args []string) *cobra.Command {
+func NewRootCmd(logger *log.Logger, args []string) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "command-executor",
 		Short: "Starts grpc service and waits for execution commands",
 		Long:  globalUsage,
-		Run:   func(cmd *cobra.Command, args []string) { runRootCmd(out, args) },
+		Run:   func(cmd *cobra.Command, args []string) { runRootCmd(logger, args) },
 	}
 
 	flags := cmd.PersistentFlags()
 	flags.Parse(args)
 
 	cmd.AddCommand(
-		newVersionCmd(out),
+		newVersionCmd(logger),
 	)
 
 	return cmd
 }
 
-func runRootCmd(out io.Writer, args []string) {
-	err := server.Run(out)
+func runRootCmd(logger *log.Logger, args []string) {
+	err := server.Run(logger)
 	if err != nil {
-		fmt.Fprintln(out, err)
+		logger.Fatal(err)
 	}
 }

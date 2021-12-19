@@ -1,0 +1,35 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/main.go",
+            "showLog": true,
+            "env": {
+                "PIPELINE_AGENT__NAME": "FakeAgent",
+                "PIPELINE_AGENT__EXECUTORS__0__NAME": "echo",
+                "PIPELINE_AGENT__EXECUTORS__0__TARGET": "127.0.0.1:50051",
+            }
+        },
+        {
+            "name": "Test Current File",
+            "type": "go",
+            "request": "launch",
+            "mode": "test",
+            "program": "${file}",
+            "args": [],
+            "showLog": true,
+            "env": {
+                "PIPELINE_AGENT__NAME": "FakeAgent",
+                "PIPELINE_AGENT__EXECUTORS__0__NAME": "echo",
+                "PIPELINE_AGENT__EXECUTORS__0__TARGET": "127.0.0.1:50051",
+            }
+        }   
+    ]
+}

@@ -26,12 +26,12 @@ Command executor communicates with PipelineAgent. An example of the commands sen
 ]
 ```
 
-A command executor layer must be added to each Container where it must execute commands. Example:
+A command executor layer must be added to each Container where it will execute commands. Example:
 ```Dockerfile
 ARG IMAGE_TAG=latest
 FROM docker.io/aryazanov/command-executor:${IMAGE_TAG} AS command-executor
 
-FROM clearlinux/tesseract-ocr:4.1.0
+FROM clearlinux/tesseract-ocr:4.1.1
 WORKDIR /
 COPY --from=command-executor /bin/command-executor /bin/command-executor
 

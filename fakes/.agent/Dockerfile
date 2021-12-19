@@ -8,10 +8,11 @@ ARG GOOS=linux
 ARG GOARCH=amd64
 ARG LDFLAGS="-w -s"
 RUN go get -d -v
-RUN GOOS=$GOOS GOARCH=$GOARCH GO111MODULE=on go build -ldflags "$LDFLAGS" -o /bin/command-executor
+RUN GOOS=$GOOS GOARCH=$GOARCH GO111MODULE=on go build -ldflags "$LDFLAGS" -o /bin/fake-agent
 
 # -----------------------------------------------
 
-FROM alpine
-COPY --from=builder /bin/command-executor /bin/command-executor
-ENTRYPOINT ["/bin/command-executor"]
+FROM alpine:3.15.0
+COPY --from=builder /bin/fake-agent /bin/fake-agent
+USER 65535:65535
+ENTRYPOINT ["/bin/fake-agent"]

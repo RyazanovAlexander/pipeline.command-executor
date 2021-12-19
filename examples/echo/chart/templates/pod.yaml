@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: echo
+spec:
+  {{- with .Values.nodeSelector }}
+  nodeSelector:
+    {{- toYaml . | nindent 8 }}
+  {{- end }}
+  {{- with .Values.imagePullSecrets }}
+  imagePullSecrets:
+    {{- toYaml . | nindent 8 }}
+  {{- end }}
+  containers:
+    - name: executor
+      image: {{ if eq "string" (printf "%T" .Values.executor_echo.image) }} "{{ .Values.executor_echo.image }}" {{ else }} "{{ .Values.executor_echo.image.containerRegister }}/{{ .Values.executor_echo.image.name }}:{{ .Values.executor_echo.image.tag }}" {{ end }}
+      imagePullPolicy: {{ .Values.executor_echo.imageConfig.pullPolicy }}
+      resources:
+        {{- toYaml .Values.executor_echo.resources | nindent 12 }}
+      env:
+        {{- toYaml .Values.executor_echo.env | nindent 12 }}
+    - name: fake-agent
+      image: {{ if eq "string" (printf "%T" .Values.pipeline_agent.image) }} "{{ .Values.pipeline_agent.image }}" {{ else }} "{{ .Values.pipeline_agent.image.containerRegister }}/{{ .Values.pipeline_agent.image.name }}:{{ .Values.pipeline_agent.image.tag }}" {{ end }}
+      imagePullPolicy: {{ .Values.pipeline_agent.imageConfig.pullPolicy }}
+      ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+      resources:
+        {{- toYaml .Values.pipeline_agent.resources | nindent 12 }}
+      env:
+        {{- toYaml .Values.pipeline_agent.env | nindent 12 }}

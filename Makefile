@@ -1,7 +1,6 @@
 BINDIR       := $(CURDIR)/bin
 INSTALL_PATH ?= /usr/local/bin
 BINNAME      ?= command-executor
-BUILDDIR     ?= build
 BUILDTIME    := $(shell date -u '+%Y-%m-%dT%H:%M:%SZ')
 
 # git
@@ -28,6 +27,14 @@ GOARCH := amd64
 
 # Rebuild the buinary if any of these files change
 SRC := $(shell find . -type f -name "*.go" -print) go.mod go.sum
+
+# ------------------------------------------------------------------------------
+#  init
+
+init:
+	minikube start
+	minikube docker-env
+	minikube -p minikube docker-env | Invoke-Expression
 
 # ------------------------------------------------------------------------------
 #  run
@@ -86,10 +93,29 @@ proto:
             --go-grpc_out=./internal/server/ \
             --go-grpc_opt=paths=source_relative
 
+	@protoc -I ./proto/ ./proto/exec.proto \
+            --go_opt=paths=source_relative \
+            --go_out=./fake/.agent/server \
+            --go-grpc_out=./fake/.agent/server \
+            --go-grpc_opt=paths=source_relative
+
 # ------------------------------------------------------------------------------
 #  container
 
 .PHONY: container
 container:
-	@docker build --build-arg LDFLAGS="$(GOLDFLAGS)" --build-arg GOOS=$(GOOS) --build-arg GOARCH=$(GOARCH) -t $(DRNAME):$(DTAG) -f ./$(BUILDDIR)/$(DFNAME) .
+	@docker build --build-arg LDFLAGS="$(GOLDFLAGS)" --build-arg GOOS=$(GOOS) --build-arg GOARCH=$(GOARCH) -t $(DRNAME):$(DTAG) -f ./$(DFNAME) .
 	@docker push $(DRNAME):$(DTAG)
+
+# ------------------------------------------------------------------------------
+#  example-echo
+
+# make example name=echo
+.PHONY: example
+example:
+	@skaffold dev -f ./examples/$(name)/skaffold.yaml --no-prune=false --cache-artifacts=false
+
+# make example-delete name=echo
+.PHONY: example-delete
+example-delete:
+	@skaffold delete -f ./examples/$(name)/skaffold.yaml

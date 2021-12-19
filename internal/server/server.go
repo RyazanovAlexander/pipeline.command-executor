@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright The pipeline-manager Authors.
+Copyright The pipeline-agent Authors.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,8 +25,7 @@ SOFTWARE.
 package server
 
 import (
-	"fmt"
-	"io"
+	"log"
 	"net"
 
 	"golang.org/x/net/context"
@@ -38,7 +37,7 @@ import (
 )
 
 type server struct {
-	out io.Writer
+	logger *log.Logger
 
 	UnimplementedExecServiceServer
 }
@@ -49,7 +48,7 @@ func (s *server) ExecuteCommands(ctx context.Context, in *ExecCommands) (*ExecRe
 	output := make([]string, len(in.Commands))
 
 	for i, command := range in.Commands {
-		resultData, err := executor.ExecCommand(command, s.out)
+		resultData, err := executor.ExecCommand(command, s.logger)
 		if err != nil {
 			result = false
 			errorMessage = err.Error()
@@ -61,8 +60,8 @@ func (s *server) ExecuteCommands(ctx context.Context, in *ExecCommands) (*ExecRe
 	return &ExecResult{Result: result, ErrorMessage: errorMessage, Output: output}, nil
 }
 
-func Run(out io.Writer) error {
-	fmt.Sprintln(out, "Launching the gRPC server on the port %s", config.Config.ServerGrpcPort)
+func Run(logger *log.Logger) error {
+	logger.Printf("Launching the gRPC server on the port %s", config.Config.ServerGrpcPort)
 
 	listner, err := net.Listen("tcp", config.Config.ServerGrpcPort)
 	if err != nil {
@@ -71,13 +70,13 @@ func Run(out io.Writer) error {
 
 	grpcServer := grpc.NewServer()
 	executorServer := server{
-		out: out,
+		logger: logger,
 	}
 
 	RegisterExecServiceServer(grpcServer, &executorServer)
 	reflection.Register(grpcServer)
 
-	fmt.Fprintln(out, "Server started sucessfully")
+	logger.Println("Server started sucessfully")
 
 	if err := grpcServer.Serve(listner); err != nil {
 		return err
