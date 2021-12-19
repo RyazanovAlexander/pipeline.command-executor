@@ -35,9 +35,3 @@ jobs:
     - name: Container
       run: |
         make container DTAG=${{ env.RELEASE_TAG }}
-  
-    - name: Publish
-      uses: actions/upload-artifact@v2
-      with: 
-        name: command-executor
-        path: $(CURDIR)/bin
