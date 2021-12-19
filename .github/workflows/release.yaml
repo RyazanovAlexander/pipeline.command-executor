@@ -23,8 +23,14 @@ jobs:
       run: |
         make test
 
+    - uses: actions/checkout@v2
+    - run: git fetch --prune --unshallow
+
     - name: Set env
       run: echo "RELEASE_TAG=`echo $(git describe --tags --abbrev=0)`" >> $GITHUB_ENV
+
+    - name: Login to DockerHub Registry
+      run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
     - name: Container
       run: |
