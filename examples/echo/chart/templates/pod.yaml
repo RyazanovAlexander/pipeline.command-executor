@@ -19,7 +19,7 @@ spec:
         {{- toYaml .Values.executor_echo.resources | nindent 12 }}
       env:
         {{- toYaml .Values.executor_echo.env | nindent 12 }}
-    - name: pipeline-agent
+    - name: fake-agent
       image: {{ if eq "string" (printf "%T" .Values.pipeline_agent.image) }} "{{ .Values.pipeline_agent.image }}" {{ else }} "{{ .Values.pipeline_agent.image.containerRegister }}/{{ .Values.pipeline_agent.image.name }}:{{ .Values.pipeline_agent.image.tag }}" {{ end }}
       imagePullPolicy: {{ .Values.pipeline_agent.imageConfig.pullPolicy }}
       ports:

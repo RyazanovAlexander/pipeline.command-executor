@@ -12,7 +12,9 @@
             "program": "${workspaceFolder}/main.go",
             "showLog": true,
             "env": {
-                "COMMAND_EXECUTOR_SERVER_GRPC_ADDRESS": ":50051",
+                "PIPELINE_AGENT__NAME": "FakeAgent",
+                "PIPELINE_AGENT__EXECUTORS__0__NAME": "echo",
+                "PIPELINE_AGENT__EXECUTORS__0__TARGET": "127.0.0.1:50051",
             }
         },
         {
@@ -24,7 +26,9 @@
             "args": [],
             "showLog": true,
             "env": {
-                "COMMAND_EXECUTOR_SERVER_GRPC_ADDRESS": "localhost:50051",
+                "PIPELINE_AGENT__NAME": "FakeAgent",
+                "PIPELINE_AGENT__EXECUTORS__0__NAME": "echo",
+                "PIPELINE_AGENT__EXECUTORS__0__TARGET": "127.0.0.1:50051",
             }
         }   
     ]

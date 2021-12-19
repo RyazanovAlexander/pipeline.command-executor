@@ -3,7 +3,7 @@ kind: Config
 build:
   artifacts:
   - image: pipeline/agent/fake
-    context: ./fakes/agent
+    context: ./fakes/.agent
     docker:
       dockerfile: Dockerfile
   - image: pipeline/executor/echo

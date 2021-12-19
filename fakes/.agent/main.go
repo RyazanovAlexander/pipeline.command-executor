@@ -38,7 +38,7 @@ import (
 	pb "fake_go_module/server"
 )
 
-const ENV_SERVER_GRPC_ADDRESS_NAME = "COMMAND_EXECUTOR_SERVER_GRPC_ADDRESS"
+const EXECUTOR_TARGET = "PIPELINE_AGENT__EXECUTORS__0__TARGET"
 
 func main() {
 	log.SetOutput(os.Stdout)
@@ -67,7 +67,9 @@ func main() {
 }
 
 func runLoop(interruptCtx context.Context) error {
-	address := os.Getenv(ENV_SERVER_GRPC_ADDRESS_NAME)
+	address := os.Getenv(EXECUTOR_TARGET)
+	log.Printf("Agent address: %s", address)
+
 	target := flag.String("addr", address, "the address to connect to")
 	conn, err := grpc.Dial(*target, grpc.WithInsecure())
 	if err != nil {
@@ -82,7 +84,7 @@ func runLoop(interruptCtx context.Context) error {
 	select {
 	case <-time.After(time.Millisecond):
 		if err := execCommands(client, commandCtx); err != nil {
-			return err
+			fmt.Println(err)
 		}
 	case <-interruptCtx.Done():
 		return nil
@@ -103,8 +105,10 @@ func execCommands(client pb.ExecServiceClient, commandCtx context.Context) error
 
 		result, err := client.ExecuteCommands(commandCtx, &commands)
 		if err != nil {
-			return err
+			log.Print(err)
+			time.Sleep(time.Second)
+		} else {
+			log.Printf("Result: %s", result.Output)
 		}
-		log.Printf("Result: %s", result.Output)
 	}
 }

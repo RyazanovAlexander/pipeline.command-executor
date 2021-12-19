@@ -95,8 +95,8 @@ proto:
 
 	@protoc -I ./proto/ ./proto/exec.proto \
             --go_opt=paths=source_relative \
-            --go_out=./fake/agent/server \
-            --go-grpc_out=./fake/agent/server \
+            --go_out=./fake/.agent/server \
+            --go-grpc_out=./fake/.agent/server \
             --go-grpc_opt=paths=source_relative
 
 # ------------------------------------------------------------------------------
