@@ -1,6 +1,6 @@
 module github.com/RyazanovAlexander/pipeline-manager/command-executor/v1
 
-go 1.18
+go 1.17
 
 require (
 	github.com/spf13/cobra v1.2.1
