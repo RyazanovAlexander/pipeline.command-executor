@@ -104,8 +104,8 @@ proto:
 
 .PHONY: container
 container:
-	@docker build --build-arg LDFLAGS="$(GOLDFLAGS)" --build-arg GOOS=$(GOOS) --build-arg GOARCH=$(GOARCH) -t $(DRNAME):$(DTAG) -f ./$(DFNAME) .
-	@docker push $(DRNAME):$(DTAG)
+	docker build --build-arg LDFLAGS="$(GOLDFLAGS)" --build-arg GOOS=$(GOOS) --build-arg GOARCH=$(GOARCH) -t $(DRNAME):$(DTAG) -f ./$(DFNAME) .
+	docker push $(DRNAME):$(DTAG)
 
 # ------------------------------------------------------------------------------
 #  example-echo
