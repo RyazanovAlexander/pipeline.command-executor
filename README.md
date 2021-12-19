@@ -3,7 +3,7 @@ A service designed to execute commands inside its container. By default, it star
 
 ![diagram](diagrams/diagram.png)
 
-Command executor communicates with PipelineAgent. An example of the commands sent by the PipelineAgent:
+Command executor communicates with Pipeline Agent. An example of the commands sent by the PipelineAgent:
 ```yaml
 "commandLines": [
   "wget -O /mnt/pipe/2rb88.png https://i.stack.imgur.com/2rb88.png",
