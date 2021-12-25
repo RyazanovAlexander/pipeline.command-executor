@@ -1,4 +1,5 @@
-FROM golang:1.17 AS builder
+ARG BUILD_IMAGE_TAG=latest
+FROM golang:${BUILD_IMAGE_TAG} AS builder
 
 WORKDIR /src/
 COPY . .

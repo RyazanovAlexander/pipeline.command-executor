@@ -35,6 +35,8 @@ init:
 	minikube start
 	minikube docker-env
 	minikube -p minikube docker-env | Invoke-Expression
+	sudo apt update
+	sudo apt install jq
 
 # ------------------------------------------------------------------------------
 #  run
@@ -104,8 +106,11 @@ proto:
 
 .PHONY: container
 container:
-	docker build --build-arg LDFLAGS="$(GOLDFLAGS)" --build-arg GOOS=$(GOOS) --build-arg GOARCH=$(GOARCH) -t $(DRNAME):$(DTAG) -f ./$(DFNAME) .
+	docker build --build-arg LDFLAGS="$(GOLDFLAGS)" --build-arg GOOS=$(GOOS) --build-arg GOARCH=$(GOARCH) --build-arg BUILD_IMAGE_TAG=$(shell jq '.build."golang-tag"' build-meta.jsonc) -t $(DRNAME):$(DTAG) -f ./$(DFNAME) .
 	docker push $(DRNAME):$(DTAG)
+
+	docker build --build-arg LDFLAGS="$(GOLDFLAGS)" --build-arg GOOS=$(GOOS) --build-arg GOARCH=$(GOARCH) --build-arg BUILD_IMAGE_TAG=$(shell jq '.build."golang-alpine-tag"' build-meta.jsonc) -t $(DRNAME):$(DTAG)-alpine -f ./$(DFNAME) .
+	docker push $(DRNAME):$(DTAG)-alpine
 
 # ------------------------------------------------------------------------------
 #  example-echo
